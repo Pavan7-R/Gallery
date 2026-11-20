@@ -329,7 +329,12 @@ export function EntranceScene({ doorsOpen = false }: { doorsOpen?: boolean }) {
             {/* Warm Lit Panes */}
             <mesh position={[0, 0, 0.045]}>
               <planeGeometry args={[0.9, 1.6]} />
-              <meshBasicMaterial color="#FFD199" />
+              <meshStandardMaterial
+                color="#5C3B1E"
+                roughness={0.5}
+                emissive="#FFAA52"
+                emissiveIntensity={0.35}
+              />
             </mesh>
           </group>
         ))
