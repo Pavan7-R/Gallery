@@ -665,50 +665,82 @@ function Chapter3Controls({
           </div>
         )}
 
-        <div className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 rounded-full bg-[#161014f0] border border-[#E2A76F3a] shadow-2xl backdrop-blur-md">
+        {/* Floating Tap-to-Inspect Exhibit Pill */}
+        {activeFrameIndex === null && (
+          <div className="animate-fade-in-up pointer-events-auto mb-2.5">
+            <button
+              onClick={() => {
+                const nearIdx = Math.min(
+                  frames.length - 1,
+                  Math.max(0, Math.round((-walkZ - 2) / 4.5))
+                );
+                focusFrame(nearIdx);
+              }}
+              className="px-4 py-2 rounded-full bg-[#181316ee] hover:bg-[#E2A76F2a] active:bg-[#E2A76F44] border border-[#E2A76F88] text-[#F5EEDB] text-xs font-sans flex items-center gap-2 shadow-2xl backdrop-blur-md transition-all font-medium cursor-pointer"
+            >
+              <span className="text-[#C9A84C]">✦</span>
+              <span>
+                Open Exhibit 0{Math.min(frames.length, Math.max(1, Math.round((-walkZ - 2) / 4.5) + 1))}:{' '}
+                {frames[Math.min(frames.length - 1, Math.max(0, Math.round((-walkZ - 2) / 4.5)))]?.title}
+              </span>
+              <span className="text-[#E2A76F] font-bold">›</span>
+            </button>
+          </div>
+        )}
+
+        <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-3 px-3 sm:px-6 py-2 rounded-full bg-[#161014f0] border border-[#E2A76F3a] shadow-2xl backdrop-blur-md">
           <button
             onClick={stepBackward}
-            className="px-3 py-2 rounded-full text-xs font-sans text-[#D4C5A9] hover:text-[#E2A76F] hover:bg-[#E2A76F1a] active:bg-[#E2A76F2a] transition-all flex items-center gap-1.5 min-w-[44px] justify-center"
+            className="px-2.5 sm:px-3 py-2 rounded-full text-xs font-sans text-[#D4C5A9] hover:text-[#E2A76F] hover:bg-[#E2A76F1a] active:bg-[#E2A76F2a] transition-all flex items-center gap-1 min-w-[40px] justify-center"
             title="Walk Backward (S or Down Arrow)"
           >
             <span>▼</span>
-            <span className="inline">Walk Back</span>
+            <span className="inline text-[11px] sm:text-xs">Back</span>
           </button>
 
           <div className="w-[1px] h-4 bg-[#E2A76F22]" />
 
           <button
             onClick={() => {
-              const prev = activeFrameIndex !== null ? activeFrameIndex - 1 : 0;
+              const currentNear = Math.min(
+                frames.length - 1,
+                Math.max(0, Math.round((-walkZ - 2) / 4.5))
+              );
+              const prev = activeFrameIndex !== null ? activeFrameIndex - 1 : currentNear - 1;
               if (prev >= 0) focusFrame(prev);
+              else focusFrame(0);
             }}
-            className="px-2.5 py-2 rounded-full text-xs text-[#E2A76F] hover:bg-[#E2A76F1a] active:bg-[#E2A76F2a] transition-all min-w-[44px] justify-center hidden sm:flex"
+            className="px-2 sm:px-2.5 py-2 rounded-full text-xs text-[#E2A76F] hover:bg-[#E2A76F1a] active:bg-[#E2A76F2a] transition-all min-w-[36px] justify-center flex items-center"
             title="Inspect Previous Exhibit"
           >
-            ⏮ Prev
+            ⏮<span className="hidden sm:inline ml-1">Prev</span>
           </button>
 
           <button
             onClick={() => {
-              const next = activeFrameIndex !== null ? activeFrameIndex + 1 : 0;
+              const currentNear = Math.min(
+                frames.length - 1,
+                Math.max(0, Math.round((-walkZ - 2) / 4.5))
+              );
+              const next = activeFrameIndex !== null ? activeFrameIndex + 1 : currentNear;
               if (next < frames.length) focusFrame(next);
               else onComplete();
             }}
-            className="px-2.5 py-2 rounded-full text-xs text-[#E2A76F] hover:bg-[#E2A76F1a] active:bg-[#E2A76F2a] transition-all min-w-[44px] justify-center hidden sm:flex"
+            className="px-2 sm:px-2.5 py-2 rounded-full text-xs text-[#E2A76F] hover:bg-[#E2A76F1a] active:bg-[#E2A76F2a] transition-all min-w-[36px] justify-center flex items-center font-semibold"
             title="Inspect Next Exhibit"
           >
-            Next ⏭
+            <span className="hidden sm:inline mr-1">Next</span>⏭
           </button>
 
           <div className="w-[1px] h-4 bg-[#E2A76F22]" />
 
           <button
             onClick={stepForward}
-            className="px-3.5 py-2 rounded-full text-xs font-sans bg-[#E2A76F22] text-[#F5EEDB] hover:bg-[#E2A76F3a] active:bg-[#E2A76F44] border border-[#E2A76F44] transition-all flex items-center gap-1.5 font-semibold min-w-[44px] justify-center"
+            className="px-3 sm:px-3.5 py-2 rounded-full text-xs font-sans bg-[#E2A76F22] text-[#F5EEDB] hover:bg-[#E2A76F3a] active:bg-[#E2A76F44] border border-[#E2A76F44] transition-all flex items-center gap-1 font-semibold min-w-[40px] justify-center"
             title="Walk Forward (W or Up Arrow or Scroll)"
           >
             <span>▲</span>
-            <span>Walk Forward</span>
+            <span className="text-[11px] sm:text-xs">Forward</span>
           </button>
         </div>
 

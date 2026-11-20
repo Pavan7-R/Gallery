@@ -531,6 +531,10 @@ function RoyalFrame({
           e.stopPropagation();
           onSelect(index);
         }}
+        onPointerUp={(e) => {
+          e.stopPropagation();
+          onSelect(index);
+        }}
         onPointerOver={(e) => {
           e.stopPropagation();
           setHovered(true);
@@ -543,6 +547,22 @@ function RoyalFrame({
       >
         <planeGeometry args={[canvasW, canvasH]} />
         <meshBasicMaterial map={texture} toneMapped={false} />
+      </mesh>
+
+      {/* Expanded Invisible Hit Target for Touch Devices (ensures reliable mobile taps) */}
+      <mesh
+        position={[0, 0, 0.06]}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(index);
+        }}
+        onPointerUp={(e) => {
+          e.stopPropagation();
+          onSelect(index);
+        }}
+      >
+        <planeGeometry args={[outerW * 1.35, outerH * 1.35]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
       {/* ── 5. Brass Inscribed Year Plaque below Frame ──────── */}
