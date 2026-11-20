@@ -48,24 +48,32 @@ export function DustParticles({ count = 120, spread = 16, height = 7 }: { count?
 
 // ─── Animated Candle Flame ─────────────────────────────────────────────────
 export function CandleFlame({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
-  const ref = useRef<THREE.Mesh>(null!);
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    const t = clock.getElapsedTime() * 7 + position[0] * 3;
-    ref.current.scale.x = scale * (1 + Math.sin(t) * 0.09);
-    ref.current.scale.y = scale * (1 + Math.sin(t * 1.3 + 1) * 0.14);
-    (ref.current.material as THREE.MeshBasicMaterial).opacity = 0.8 + Math.sin(t * 0.8) * 0.2;
-  });
   return (
-    <mesh ref={ref} position={position}>
-      <coneGeometry args={[0.035 * scale, 0.14 * scale, 8]} />
-      <meshBasicMaterial color="#FFA94D" transparent opacity={0.88} />
-    </mesh>
+    <group position={position}>
+      {/* Outer warm halo */}
+      <mesh scale={[scale * 1.25, scale * 1.4, scale * 1.25]}>
+        <coneGeometry args={[0.038, 0.15, 6]} />
+        <meshBasicMaterial color="#FF9224" transparent opacity={0.65} />
+      </mesh>
+      {/* Bright inner golden flame core */}
+      <mesh scale={[scale * 0.85, scale, scale * 0.85]} position={[0, -0.01, 0]}>
+        <coneGeometry args={[0.024, 0.13, 6]} />
+        <meshBasicMaterial color="#FFF0A0" />
+      </mesh>
+    </group>
   );
 }
 
 // ─── Crystal Chandelier Component ──────────────────────────────────────────
-function CrystalChandelier({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
+function CrystalChandelier({
+  position,
+  scale = 1,
+  hasLight = true,
+}: {
+  position: [number, number, number];
+  scale?: number;
+  hasLight?: boolean;
+}) {
   const groupRef = useRef<THREE.Group>(null!);
 
   useFrame(({ clock }) => {
@@ -120,8 +128,10 @@ function CrystalChandelier({ position, scale = 1 }: { position: [number, number,
         );
       })}
 
-      {/* Central Sparkling Warm Crystal Chandelier Light */}
-      <pointLight position={[0, -0.95, 0]} intensity={4.5} color="#FFAA52" distance={8.0} decay={1.8} />
+      {/* Central Sparkling Warm Crystal Chandelier Light (selectively placed for high FPS) */}
+      {hasLight && (
+        <pointLight position={[0, -0.95, 0]} intensity={4.5} color="#FFAA52" distance={8.0} decay={1.8} />
+      )}
     </group>
   );
 }
@@ -134,35 +144,26 @@ function PalaceWallSconce({
   position: [number, number, number];
   rotationY?: number;
 }) {
-  const lightRef = useRef<THREE.PointLight>(null!);
-
-  useFrame(({ clock }) => {
-    if (lightRef.current) {
-      const t = clock.getElapsedTime() * 6.5 + position[2] * 2.1;
-      lightRef.current.intensity = 2.4 + Math.sin(t) * 0.35 + Math.cos(t * 1.8) * 0.2;
-    }
-  });
-
   return (
     <group position={position} rotation={[0, rotationY, 0]}>
       {/* Gilded Wall Backplate Medallion */}
       <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.07, 0.08, 0.025, 16]} />
+        <cylinderGeometry args={[0.07, 0.08, 0.025, 12]} />
         <meshStandardMaterial color="#D4AF37" metalness={0.9} roughness={0.25} />
       </mesh>
       {/* Curved Brass Arms */}
       <mesh position={[-0.08, 0.04, 0.07]} rotation={[0.25, 0, -0.35]}>
-        <cylinderGeometry args={[0.012, 0.012, 0.15, 8]} />
+        <cylinderGeometry args={[0.012, 0.012, 0.15, 6]} />
         <meshStandardMaterial color="#D4AF37" metalness={0.9} roughness={0.25} />
       </mesh>
       <mesh position={[0.08, 0.04, 0.07]} rotation={[0.25, 0, 0.35]}>
-        <cylinderGeometry args={[0.012, 0.012, 0.15, 8]} />
+        <cylinderGeometry args={[0.012, 0.012, 0.15, 6]} />
         <meshStandardMaterial color="#D4AF37" metalness={0.9} roughness={0.25} />
       </mesh>
       {/* Candle 1 (Left) */}
       <group position={[-0.12, 0.12, 0.12]}>
         <mesh position={[0, 0, 0]}>
-          <cylinderGeometry args={[0.018, 0.018, 0.15, 8]} />
+          <cylinderGeometry args={[0.018, 0.018, 0.15, 6]} />
           <meshStandardMaterial color="#FAF5E8" roughness={0.7} />
         </mesh>
         <CandleFlame position={[0, 0.11, 0]} scale={0.75} />
@@ -170,20 +171,11 @@ function PalaceWallSconce({
       {/* Candle 2 (Right) */}
       <group position={[0.12, 0.12, 0.12]}>
         <mesh position={[0, 0, 0]}>
-          <cylinderGeometry args={[0.018, 0.018, 0.15, 8]} />
+          <cylinderGeometry args={[0.018, 0.018, 0.15, 6]} />
           <meshStandardMaterial color="#FAF5E8" roughness={0.7} />
         </mesh>
         <CandleFlame position={[0, 0.11, 0]} scale={0.75} />
       </group>
-      {/* Warm Flickering Candlelight Cast */}
-      <pointLight
-        ref={lightRef}
-        position={[0, 0.14, 0.18]}
-        intensity={2.4}
-        color="#FFA347"
-        distance={4.2}
-        decay={2.0}
-      />
     </group>
   );
 }
@@ -519,14 +511,16 @@ function RoyalFrame({
           <cylinderGeometry args={[0.015, 0.015, 0.2, 8]} />
           <meshStandardMaterial color="#C9A84C" metalness={0.9} roughness={0.2} />
         </mesh>
-        {/* Focused Golden Spotlight on Artwork */}
-        <pointLight
-          position={[0, -0.16, 0.14]}
-          intensity={isSelected ? 5.5 : hovered ? 4.2 : 3.2}
-          color={isSelected ? '#FFF5E0' : '#FFE8C8'}
-          distance={3.8}
-          decay={1.8}
-        />
+        {/* Focused Golden Spotlight on Artwork — active when inspected */}
+        {(isSelected || hovered) && (
+          <pointLight
+            position={[0, -0.16, 0.14]}
+            intensity={isSelected ? 5.5 : 4.0}
+            color={isSelected ? '#FFF5E0' : '#FFE8C8'}
+            distance={4.0}
+            decay={1.8}
+          />
+        )}
       </group>
 
       {/* ── 4. Photo Canvas (Clickable target — perfectly centered) ── */}
@@ -637,7 +631,7 @@ export function CorridorScene({
       {/* Multi-tier Crystal Chandeliers Overhead */}
       {Array.from({ length: 12 }).map((_, i) => (
         <group key={`chand-${i}`} position={[0, 3.2, -i * 4.2 + 1.2]}>
-          <CrystalChandelier position={[0, 0, 0]} scale={0.85} />
+          <CrystalChandelier position={[0, 0, 0]} scale={0.85} hasLight={i % 3 === 0} />
         </group>
       ))}
 
@@ -1138,18 +1132,16 @@ export function TerraceScene() {
       <fog attach="fog" args={["#0C1120", 22, 60]} />
       <ambientLight intensity={1.8} color="#B0C8F0" />
       {/* Strong moonlight from behind camera, angled down onto terrace */}
-      <directionalLight position={[0, 12, 16]} intensity={3.2} color="#C8DCFF" castShadow />
-      {/* Fill light from front-left to eliminate shadow pockets */}
-      <pointLight position={[-4, 4, 6]} intensity={18} color="#8AAAE8" distance={28} decay={1.4} />
-      {/* Fill light from front-right */}
-      <pointLight position={[4, 4, 6]} intensity={16} color="#9AB8F0" distance={26} decay={1.4} />
+      <directionalLight position={[0, 12, 16]} intensity={3.0} color="#C8DCFF" />
+      {/* Fill light from front */}
+      <pointLight position={[0, 4, 6]} intensity={18} color="#90B0E8" distance={26} decay={1.4} />
       {/* Uplight from terrace floor — bounced moonlight */}
       <pointLight position={[0, -0.5, 0]} intensity={10} color="#A0BBEF" distance={16} decay={1.8} />
 
       {/* Radiant Full Moon & Ocean Reflection */}
       <FullMoon />
       <MoonlitOcean />
-      <Stars radius={95} depth={60} count={4200} factor={6} fade speed={0.3} />
+      <Stars radius={95} depth={60} count={1200} factor={5} fade speed={0.2} />
 
       {/* Classical Stone Terrace Patio */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.4, 0]}>

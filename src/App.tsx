@@ -1269,12 +1269,19 @@ function SceneCanvas({
   activeFrameIndex: number | null;
   onSelectFrame: (idx: number) => void;
 }) {
+  const isMobile = useIsMobile();
+
   return (
     <Canvas
       style={{ position: 'fixed', inset: 0, zIndex: 0, touchAction: 'none' }}
-      dpr={[1, 2]}
+      dpr={isMobile ? 1 : [1, 1.5]}
       camera={{ fov: 64, near: 0.1, far: 120, position: [0, 0.6, 2.8] }}
-      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+      gl={{
+        antialias: !isMobile,
+        alpha: false,
+        powerPreference: 'high-performance',
+        precision: isMobile ? 'mediump' : 'highp',
+      }}
     >
       <Suspense fallback={null}>
         {(chapter === 1 || chapter === 2) && <EntranceScene doorsOpen={doorsOpen} />}
