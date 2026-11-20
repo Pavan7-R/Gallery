@@ -178,117 +178,37 @@ function Chapter1({ onNext }: { onNext: () => void }) {
   const r = GALLERY_DATA.recipient;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 40,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        pointerEvents: 'none',
-      }}
-    >
+    <div className="fixed inset-0 z-30 flex flex-col items-center justify-end pb-12 sm:pb-16 px-4 pointer-events-none">
       <div
-        style={{
-          pointerEvents: 'auto',
-          width: '100%',
-          maxWidth: '560px',
-          borderRadius: '20px',
-          background: 'linear-gradient(165deg, rgba(28, 18, 22, 0.97) 0%, rgba(18, 12, 15, 0.98) 100%)',
-          border: '1.5px solid rgba(226, 167, 111, 0.45)',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(226, 167, 111, 0.15)',
-          backdropFilter: 'blur(16px)',
-          padding: '36px 28px',
-          position: 'relative',
-          textAlign: 'center',
-        }}
+        className="animate-fade-in-up pointer-events-auto w-full max-w-[560px] rounded-2xl bg-gradient-to-b from-[#1E1418ee] via-[#160E12ee] to-[#100A0Dee] border border-[#E2A76F33] shadow-2xl backdrop-blur-xl p-8 sm:p-10 relative"
       >
-        <div style={{ position: 'absolute', top: -28, left: '50%', transform: 'translateX(-50%)' }}>
-          <CandleIcon flameSize={20} />
+        <div className="absolute -top-7 left-1/2 -translate-x-1/2">
+          <CandleIcon flameSize={18} />
         </div>
 
-        <p
-          style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: '11px',
-            color: '#E2A76F',
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            marginBottom: '6px',
-            fontWeight: 600,
-          }}
-        >
+        <p className="font-sans text-[10px] text-[#E2A76F99] tracking-[0.3em] uppercase text-center mb-1">
           {d.subheading}
         </p>
 
-        <h3
-          style={{
-            fontFamily: 'Cormorant Garamond, Georgia, serif',
-            fontSize: '20px',
-            color: '#FFE8C8',
-            fontStyle: 'italic',
-            marginBottom: '4px',
-          }}
-        >
+        <h3 className="font-serif text-center text-lg sm:text-xl text-[#F5EEDB88] italic mb-1">
           {r.honorific}
         </h3>
-
-        <h1
-          style={{
-            fontFamily: 'Cormorant Garamond, Georgia, serif',
-            fontSize: '32px',
-            fontWeight: 700,
-            color: '#FAF4E6',
-            letterSpacing: '0.02em',
-            marginBottom: '14px',
-            display: 'flex',
-            alignItems: 'baseline',
-            justifyContent: 'center',
-            gap: '8px',
-          }}
-        >
+        <h1 className="font-serif text-center text-2xl sm:text-4xl font-semibold text-[#F5EEDB] tracking-wide mb-3 flex items-baseline justify-center gap-2">
           <span>{r.name}</span>
           {r.nickname && (
-            <span
-              style={{
-                fontSize: '14px',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 400,
-                color: '#E2A76F',
-                fontStyle: 'italic',
-              }}
-            >
+            <span className="text-xs sm:text-sm font-sans font-normal text-[#E2A76Fcc] tracking-normal italic">
               ({r.nickname})
             </span>
           )}
         </h1>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '16px' }}>
-          <div style={{ width: 44, height: 1, background: 'linear-gradient(90deg, transparent, #E2A76F, transparent)' }} />
-          <span style={{ color: '#C9A84C', fontSize: '10px' }}>✦</span>
-          <div style={{ width: 44, height: 1, background: 'linear-gradient(90deg, transparent, #E2A76F, transparent)' }} />
-        </div>
+        <GoldDivider className="mb-4" />
 
-        <p
-          style={{
-            fontFamily: 'Cormorant Garamond, Georgia, serif',
-            fontSize: '15px',
-            lineHeight: 1.75,
-            color: '#FAF4E6',
-            whiteSpace: 'pre-line',
-            maxHeight: '40vh',
-            overflowY: 'auto',
-            padding: '0 8px',
-            textAlign: 'center',
-          }}
-        >
+        <p className="font-serif text-center text-sm sm:text-[15px] leading-relaxed text-[#D4C5A9] whitespace-pre-line max-h-[38vh] overflow-y-auto px-2">
           {d.body}
         </p>
 
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
+        <div className="flex justify-center mt-7">
           <button
             className="btn-gallery"
             onClick={() => {
@@ -375,23 +295,12 @@ function Chapter2({
         </div>
       </div>
 
-      <div
-        className="pointer-events-auto text-center"
-        style={{
-          background: 'rgba(22, 14, 18, 0.94)',
-          border: '1px solid rgba(226, 167, 111, 0.45)',
-          borderRadius: '16px',
-          padding: '24px 32px',
-          backdropFilter: 'blur(12px)',
-          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.8)',
-          maxWidth: '480px',
-        }}
-      >
+      <div className="animate-fade-in-up text-center">
         <p className="chapter-badge mb-2">Chapter 02 / 05 — The Grand Entrance</p>
-        <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#FAF4E6] mb-2">
+        <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#F5EEDB] mb-2">
           {GALLERY_DATA.threshold.heading}
         </h2>
-        <p className="font-serif text-[#F5EEDB] text-base mb-6">
+        <p className="font-serif text-[#D4C5A9] text-base mb-6">
           {GALLERY_DATA.threshold.subheading}
         </p>
 
@@ -400,7 +309,7 @@ function Chapter2({
             ✦ {GALLERY_DATA.threshold.ctaLabel}
           </button>
         ) : (
-          <p className="font-serif animate-fade-in text-[#E2A76F] text-sm tracking-widest uppercase font-medium">
+          <p className="font-serif animate-fade-in text-[#E2A76F] text-sm tracking-widest uppercase">
             The palace doors swing inward… Welcome, Your Highness…
           </p>
         )}
